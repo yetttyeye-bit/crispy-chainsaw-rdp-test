@@ -14,8 +14,8 @@ run: |
    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force
  netsh advfirewall firewall delete rule name="RDP-Tailscale"
   netsh advfirewall firewall add rule name="RDP-Tailscale" dir=in action=allow protocol=TCP localport=3389
-   Restart-Service -Name TermService -Force
-- name: Create RDP User with Secure Password
+ Restart-Service -Name TermService -Force
+ - name: Create RDP User with Secure Password
 run: |
  $username = "Aimasdd"
   $password = "aimasdd@123"
@@ -27,14 +27,14 @@ echo "RDP_CREDS=User: $username | Password: $password" >> $env:GITHUB_ENV
  if (-not (Get-LocalUser -Name $username)) {
  exit 1
 }
-- name: Install Tailscale
-run: |
-$tsUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-1.82.0-amd64.msi"
-$installerPath = "$env:TEMP\tailscale.msi"
-Invoke-WebRequest -Uri $tsUrl -OutFile $installerPath
-Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/norestart" -Wait
+ - name: Install Tailscale
+ run: |
+  $tsUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-1.82.0-amd64.msi"
+  $installerPath = "$env:TEMP\tailscale.msi"
+   Invoke-WebRequest -Uri $tsUrl -OutFile $installerPath
+    Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/norestart" -Wait
 Remove-Item $installerPath -Force
-- name: Establish Tailscale Connection
+ - name: Establish Tailscale Connection
 run: |
 & "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=${{ secrets.TAILSCALE_AUTH_KEY }} --hostname=gh-runner-$env:GITHUB_RUN_ID
 $tsIP = $nul
