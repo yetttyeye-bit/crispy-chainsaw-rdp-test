@@ -23,16 +23,16 @@ run: |
   New-LocalUser -Name $username -Password $securePass -AccountNeverExpires
    Add-LocalGroupMember -Group "Administrators" -Member $username
     Add-LocalGroupMember -Group "Remote Desktop Users" -Member $username
-echo "RDP_CREDS=User: $username | Password: $password" >> $env:GITHUB_ENV
+     echo "RDP_CREDS=User: $username | Password: $password" >> $env:GITHUB_ENV
  if (-not (Get-LocalUser -Name $username)) {
  exit 1
 }
  - name: Install Tailscale
  run: |
   $tsUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-1.82.0-amd64.msi"
-  $installerPath = "$env:TEMP\tailscale.msi"
-   Invoke-WebRequest -Uri $tsUrl -OutFile $installerPath
-    Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/norestart" -Wait
+   $installerPath = "$env:TEMP\tailscale.msi"
+    Invoke-WebRequest -Uri $tsUrl -OutFile $installerPath
+     Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/norestart" -Wait
 Remove-Item $installerPath -Force
  - name: Establish Tailscale Connection
 run: |
