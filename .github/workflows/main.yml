@@ -25,7 +25,7 @@ run: |
     Add-LocalGroupMember -Group "Remote Desktop Users" -Member $username
      echo "RDP_CREDS=User: $username | Password: $password" >> $env:GITHUB_ENV
  if (-not (Get-LocalUser -Name $username)) {
-       exit 1
+  exit 1
 }
  - name: Install Tailscale
  run: |
